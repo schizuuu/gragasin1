@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schizuuu Store - Shoes</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #6a0dad);
+            color: #fff;
+            transition: background 0.3s ease;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10%;
+            background: linear-gradient(135deg, #1a1a1a, #6a0dad);
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #9400d3;
+            text-transform: uppercase;
+        }
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            text-align: center;
+        }
+        .search-bar input {
+            width: 60%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+        .cart-icon {
+            cursor: pointer;
+            position: relative;
+        }
+        .cart-counter {
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            display: none;
+        }
+        .cart-container {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: #fff;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: 0.3s ease-in-out;
+        }
+        .filter-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .filter-buttons button, .back-button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #6a0dad;
+            color: white;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out;
+        }
+        .filter-buttons button:hover, .back-button:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 50px 10%;
+        }
+        .product {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px #9400d3;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .product:hover {
+            transform: scale(1.05);
+        }
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+        }
+    </style>
+    <script>
+        let cartCount = 0;
+        
+        function filterBrand(brand) {
+            document.querySelectorAll('.filter-buttons button').forEach(btn => btn.classList.remove('clicked'));
+            document.querySelector(`button[onclick="filterBrand('${brand}')"]`).classList.add('clicked');
+            
+            let products = {
+                merrell: [{name: 'Moc Speed Streak Evo Bracken', img: 'm1.png'}, {name: 'Hydro Mule (W) Peyote', img: 'm2.png'}],
+                nike: [{name: 'Air Max SNDR Black', img: 'Air Max SNDR Black.png'}, {name: 'Gato Pine GreenWhite-Gum Light Brown', img: 'Gato Pine GreenWhite-Gum Light Brown.png'}],
+                adidas: [{name: 'Superstar 82', img: 'a1.png'}, {name: 'Tokyo Decon W', img: 'a2.png'}],
+                puma: [{name: 'Easy Rider Premium Glacial Gray/Frosted Ivory', img: 'p1.png'}, {name: 'Arizona Nylon Sun Stream/Vapor Grey', img: 'p2.png'}]
+            };
+            
+            let container = document.getElementById("brandProducts");
+            container.innerHTML = "";
+            products[brand].forEach(model => {
+                container.innerHTML += `<div class='product'>
+                    <img src='${model.img}' alt='${model.name}'>
+                    <h3>${model.name}</h3>
+                    <button class='add-to-cart' onclick="addToCart()">Add to Cart</button>
+                    <button class='buy-now' onclick="buyNow('${model.name}')">Buy Now</button>
+                </div>`;
+            });
+        }
+        
+        function addToCart() {
+            cartCount++;
+            document.getElementById("cartCounter").innerText = cartCount;
+            document.getElementById("cartCounter").style.display = "inline-block";
+            alert("Item added to cart!");
+        }
+        
+        function buyNow(item) {
+            alert("Redirecting to checkout for " + item);
+            window.location.href = "checkout.html?item=" + encodeURIComponent(item);
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">Schizuuu Store</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for shoes...">
+        </div>
+        <div class="cart-icon">🛒<span class="cart-counter" id="cartCounter">0</span></div>
+    </header>
+    <div class="filter-buttons">
+        <button onclick="filterBrand('nike')">Nike</button>
+        <button onclick="filterBrand('adidas')">Adidas</button>
+        <button onclick="filterBrand('puma')">Puma</button>
+        <button onclick="filterBrand('merrell')">Merrell</button>
+        <button class="back-button" onclick="goBack()">Back</button>
+    </div>
+    <section class="product-container" id="brandProducts"></section>
+</body>
+</html>

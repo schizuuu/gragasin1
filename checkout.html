@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Schizuuu Store</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #6a0dad);
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .checkout-container, .confirmation-container {
+            background: #fff;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+        }
+        select, input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            display: block;
+            background: #f9f9f9;
+        }
+        .confirm-button {
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            background: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+        .confirm-button:hover {
+            transform: scale(1.05);
+            background: #e03e00;
+        }
+        .item-image {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function updateBarangays() {
+            const barangays = {
+                'San Jose': ['Bagong Sikat', 'Pag-asa', 'Central', 'Labangan Poblacion'],
+                'Mamburao': ['Payompon', 'Poblacion 1', 'Poblacion 2', 'Tayamaan'],
+                'Sablayan': ['Poblacion', 'Ligaya', 'San Vicente', 'Buenavista'],
+                'Rizal': ['Adela', 'San Pedro', 'Sto. Ni\u00f1o', 'Magsikap'],
+                'Calintaan': ['Iriron', 'New Dagupan', 'Poblacion', 'Tanyag']
+            };
+            
+            const location = document.getElementById('location').value;
+            const barangaySelect = document.getElementById('barangay');
+            
+            barangaySelect.innerHTML = '';
+            if (barangays[location]) {
+                barangays[location].forEach(barangay => {
+                    const option = document.createElement('option');
+                    option.value = barangay;
+                    option.textContent = barangay;
+                    barangaySelect.appendChild(option);
+                });
+            }
+        }
+
+        function confirmPurchase() {
+            const item = document.getElementById('selectedItem').innerText;
+            const location = document.getElementById('location').value;
+            const barangay = document.getElementById('barangay').value;
+            const itemImage = document.getElementById('itemImage').src;
+            
+            document.getElementById('checkout-section').style.display = 'none';
+            document.getElementById('confirmation-section').style.display = 'block';
+            
+            document.getElementById('confirmItem').innerText = item;
+            document.getElementById('confirmLocation').innerText = location;
+            document.getElementById('confirmBarangay').innerText = barangay;
+            document.getElementById('confirmItemImage').src = itemImage;
+        }
+
+        window.onload = function() {
+            const item = getQueryParam('item');
+            if (item) {
+                document.getElementById('selectedItem').innerText = item;
+                document.getElementById('itemImage').src = item.toLowerCase().replace(/ /g, '_') + '.png';
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="checkout-section" class="checkout-container">
+        <h2>Checkout</h2>
+        <p><strong>Item:</strong> <span id="selectedItem">Item Name</span></p>
+        <img id="itemImage" class="item-image" src="" alt="Selected Item">
+        
+        <label for="location">Select Municipality:</label>
+        <select id="location" onchange="updateBarangays()">
+            <option value="San Jose">San Jose</option>
+            <option value="Mamburao">Mamburao</option>
+            <option value="Sablayan">Sablayan</option>
+            <option value="Rizal">Rizal</option>
+            <option value="Calintaan">Calintaan</option>
+        </select>
+        
+        <label for="barangay">Select Barangay:</label>
+        <select id="barangay">
+        </select>
+        
+        <button class="confirm-button" onclick="confirmPurchase()">Confirm Purchase</button>
+    </div>
+    
+    <div id="confirmation-section" class="confirmation-container" style="display: none;">
+        <h2>Order Confirmed!</h2>
+        <p><strong>Item:</strong> <span id="confirmItem"></span></p>
+        <img id="confirmItemImage" class="item-image" src="" alt="Confirmed Item">
+        <p><strong>Location:</strong> <span id="confirmLocation"></span></p>
+        <p><strong>Barangay:</strong> <span id="confirmBarangay"></span></p>
+        <p>Thank you for your purchase!</p>
+    </div>
+</body>
+</html>
